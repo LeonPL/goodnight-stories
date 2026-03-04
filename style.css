@@ -1,0 +1,109 @@
+/* Modern Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+    --bg-color: #fffaf5;
+    --primary-color: #ff8e53;
+    --secondary-color: #4facfe;
+    --text-color: #333;
+    --transition: all 0.4s ease-in-out;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards;
+}
+
+.ai-text {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.content p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeInUp 1s 0.3s forwards;
+}
+
+/* Button & Transitions */
+.cta-btn {
+    padding: 15px 40px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0;
+    animation: fadeInUp 1s 0.6s forwards;
+}
+
+.cta-btn:hover {
+    transform: scale(1.05);
+    background: var(--primary-color);
+    box-shadow: 0 10px 20px rgba(255, 142, 83, 0.3);
+}
+
+/* Footer Links */
+footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #888;
+    margin: 0 15px;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--secondary-color);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Tweak */
+@media (max-width: 768px) {
+    .content h1 { font-size: 2.5rem; }
+}
