@@ -37,6 +37,7 @@ export default async function handler(req, res) {
       totalChunks: Math.ceil(fileSizeBytes / chunkSize),
     });
   } catch (err) {
-    res.status(502).json({ error: err.message });
+    console.error("init upload error:", err);
+    res.status(502).json({ error: "Upload failed. Please try again." });
   }
 }

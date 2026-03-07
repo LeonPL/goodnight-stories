@@ -25,6 +25,11 @@
       "source": "jerrar670/surf-website",
       "sourceType": "github",
       "computedHash": "64ea358c26f74241b62a181b461cb4b24d9fce8f858fc6696890da8eba2b9379"
+    },
+    "security-best-practices": {
+      "source": "supercent-io/skills-template",
+      "sourceType": "github",
+      "computedHash": "a8c825eb0f2d2d3381f93dad83ea531579445c5646b38be0170f4a782689cf4b"
     }
   }
 }

@@ -41,6 +41,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
+  // Prevent SSRF: only allow TikTok's official upload endpoint.
+  if (!uploadUrl.startsWith("https://open-upload.tiktokapis.com/")) {
+    return res.status(400).json({ error: "Invalid upload URL" });
+  }
+
   try {
     // Note 3: Buffer.from(data, "base64") decodes the base64 string back into
     // raw binary bytes. This is the reverse of the btoa() call in script.js.
@@ -51,6 +56,7 @@ export default async function handler(req, res) {
     // it received the correct acknowledgement and log progress accurately.
     res.status(200).json({ ok: true, chunkIndex });
   } catch (err) {
-    res.status(502).json({ error: err.message });
+    console.error("chunk upload error:", err);
+    res.status(502).json({ error: "Upload failed. Please try again." });
   }
 }
