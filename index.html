@@ -38,19 +38,8 @@
           <span class="nav__logo-icon">🌙</span>
           <span class="nav__logo-text">Good Night Stories</span>
         </a>
-        <!-- Note 8: The nav auth area has two mutually exclusive states.
-             JavaScript toggles display:none between them after calling /api/auth/me.
-             Both are present in the HTML; only one is visible at a time. -->
         <div class="nav__auth">
-          <!-- Note 9: style="display:none" hides this element by default.
-               Script 5 (initAuth) reveals it when the user is logged in.
-               Width/height on <img> prevent layout shift during load. -->
-          <div id="nav-user" class="nav-user" style="display:none;">
-            <img id="nav-avatar" class="nav-user__avatar" src="" alt="" width="28" height="28">
-            <span id="nav-name" class="nav-user__name"></span>
-            <button id="nav-logout" class="btn btn--ghost btn--sm" type="button">Sign out</button>
-          </div>
-          <a id="nav-signin" href="#signin" class="btn btn--gold btn--sm">Get Started</a>
+          <a href="#signin" class="btn btn--gold btn--sm">Get Started</a>
         </div>
       </div>
     </div>
@@ -76,7 +65,7 @@
         TikTok channel — in seconds.
       </p>
       <div class="hero__actions">
-        <a href="#signin" class="btn btn--gold btn--lg">Sign In &amp; Start Creating</a>
+        <a href="#signin" class="btn btn--gold btn--lg">Start Creating</a>
         <a href="#how-it-works" class="btn btn--ghost btn--lg">See How It Works</a>
       </div>
     </div>
@@ -197,7 +186,7 @@
           <div class="upload-zone" aria-hidden="true">
             <span class="upload-zone__icon">🎬</span>
             <p class="upload-zone__primary">Drag &amp; drop your story video</p>
-            <p class="upload-zone__secondary">MP4, MOV · up to 2 GB · max 10 min</p>
+            <p class="upload-zone__secondary">MP4, MOV · up to 100 MB · max 5 min</p>
             <button class="btn btn--gold btn--sm" type="button" tabindex="-1">Browse Files</button>
           </div>
 
@@ -237,41 +226,11 @@
     <div class="container">
       <div class="signin__card" data-reveal>
 
-        <!-- State: not logged in -->
-        <div id="auth-panel">
-          <div class="section-label" style="text-align: center;">Get Started Free</div>
-          <h2 class="section-title" style="text-align: center; margin-bottom: 16px;">
-            Start sharing stories tonight
-          </h2>
-          <p class="signin__sub">
-            Sign in with your existing account. No new password to remember.
-          </p>
-          <div class="signin__buttons">
-            <a href="/api/auth/google" class="oauth-btn oauth-btn--google">
-              <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66 2.84-.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Continue with Google
-            </a>
-          </div>
-          <p class="signin__legal">
-            By signing in you agree to our
-            <a href="termsOfService.html">Terms of Service</a> and
-            <a href="privacy.html">Privacy Policy</a>.
-          </p>
-        </div>
-
-        <!-- State: logged in — upload form -->
-        <div id="upload-panel" style="display:none;">
+        <div id="upload-panel">
           <div class="section-label" style="text-align: center;">Upload Your Story</div>
           <h2 class="section-title" style="text-align: center; margin-bottom: 8px;">
             Share a goodnight story
           </h2>
-          <p class="signin__sub" id="upload-welcome"></p>
-
           <!-- Note 10: novalidate disables the browser's native HTML5
                validation UI so we can show custom styled error messages
                instead of the default browser popups. Validation logic lives
@@ -281,18 +240,31 @@
                  to accept files dragged from the OS file manager. It also wraps a
                  hidden <input type="file"> triggered by the "Browse Files" label click. -->
             <div class="upload-drop-zone" id="drop-zone">
-              <span class="upload-zone__icon">🎬</span>
-              <p class="upload-zone__primary">Drag &amp; drop your story video</p>
-              <p class="upload-zone__secondary">MP4, MOV &middot; up to 2 GB &middot; max 10 min</p>
-              <!-- Note 12: Wrapping an <input type="file"> inside a <label> means
-                 clicking the label triggers the file picker. The input itself is
-                 hidden (display:none) to avoid the default unstyled browser control.
-                 accept restricts the file picker to MP4 and QuickTime (.mov) formats. -->
-            <label class="btn btn--gold btn--sm" style="cursor:pointer;">
-                Browse Files
-                <input type="file" id="video-file" accept="video/mp4,video/quicktime,.mp4,.mov" style="display:none;">
-              </label>
-              <p id="file-selected" class="upload-zone__secondary" style="display:none;font-weight:600;"></p>
+              <!-- Default state: shown before a file is chosen -->
+              <div class="drop-zone__default">
+                <span class="upload-zone__icon">🎬</span>
+                <p class="upload-zone__primary">Drag &amp; drop your story video</p>
+                <p class="upload-zone__secondary">MP4, MOV &middot; up to 100 MB &middot; max 5 min</p>
+                <!-- Note 12: Wrapping an <input type="file"> inside a <label> means
+                   clicking the label triggers the file picker. The input itself is
+                   hidden (display:none) to avoid the default unstyled browser control.
+                   accept restricts the file picker to MP4 and QuickTime (.mov) formats. -->
+                <label class="btn btn--gold btn--sm" style="cursor:pointer;">
+                  Browse Files
+                  <input type="file" id="video-file" accept="video/mp4,video/quicktime,.mp4,.mov" style="display:none;">
+                </label>
+              </div>
+              <!-- Selected state: shown after a file is chosen -->
+              <div class="drop-zone__selected" style="display:none;">
+                <div class="drop-zone__3d-scene" aria-hidden="true">
+                  <div class="orbit orbit--1"></div>
+                  <div class="orbit orbit--2"></div>
+                  <div class="orbit orbit--3"></div>
+                  <div class="orbit__center">✓</div>
+                </div>
+                <p class="drop-zone__filename" id="drop-zone-filename"></p>
+                <button type="button" class="drop-zone__change-btn" id="drop-zone-change">Change file</button>
+              </div>
             </div>
 
             <div class="form-group">
@@ -347,6 +319,19 @@
       </div>
     </div>
   </footer>
+
+  <!-- Publish coming-soon overlay -->
+  <div id="publish-overlay" style="display:none;" class="publish-overlay">
+    <div class="publish-overlay__card">
+      <div class="publish-overlay__icon">🚀</div>
+      <h2 class="publish-overlay__title">Feature Coming Soon</h2>
+      <p class="publish-overlay__body">
+        We're currently working on deploying this feature and are in active contact with TikTok.
+        Stay tuned — publishing will be live very soon!
+      </p>
+      <button class="btn btn--gold btn--lg" id="publish-overlay-close">Got it</button>
+    </div>
+  </div>
 
   <!-- Three.js via CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

@@ -894,6 +894,129 @@ img, svg { display: block; }
   background: rgba(245, 200, 66, 0.06);
 }
 
+/* Selected state */
+.upload-drop-zone.drop-zone--has-file {
+  border-color: var(--gold);
+  border-style: solid;
+  background: rgba(245, 200, 66, 0.05);
+  box-shadow: 0 0 32px rgba(245, 200, 66, 0.15), inset 0 0 24px rgba(245, 200, 66, 0.04);
+  padding: 28px 20px;
+}
+
+.drop-zone__default {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.drop-zone__selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  animation: dzSelectedIn 0.5s var(--ease-out) both;
+}
+
+@keyframes dzSelectedIn {
+  from { opacity: 0; transform: scale(0.9) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 3D orbital scene */
+.drop-zone__3d-scene {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  perspective: 400px;
+}
+
+.orbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.orbit--1 {
+  border-color: var(--gold);
+  opacity: 0.9;
+  animation: orbit1 2.8s linear infinite;
+}
+.orbit--2 {
+  border-color: rgba(245, 200, 66, 0.55);
+  animation: orbit2 3.6s linear infinite;
+}
+.orbit--3 {
+  border-color: rgba(245, 200, 66, 0.3);
+  animation: orbit3 4.4s linear infinite;
+}
+
+@keyframes orbit1 {
+  from { transform: rotateX(65deg) rotateZ(0deg); }
+  to   { transform: rotateX(65deg) rotateZ(360deg); }
+}
+@keyframes orbit2 {
+  from { transform: rotateX(65deg) rotateY(60deg) rotateZ(0deg); }
+  to   { transform: rotateX(65deg) rotateY(60deg) rotateZ(-360deg); }
+}
+@keyframes orbit3 {
+  from { transform: rotateX(65deg) rotateY(-60deg) rotateZ(0deg); }
+  to   { transform: rotateX(65deg) rotateY(-60deg) rotateZ(360deg); }
+}
+
+.orbit__center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #ff9f43);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #0a0511;
+  font-weight: 700;
+  box-shadow: 0 0 18px rgba(245, 200, 66, 0.5);
+  animation: orbitCenterPulse 2s ease-in-out infinite;
+}
+
+@keyframes orbitCenterPulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(245, 200, 66, 0.5); }
+  50%       { box-shadow: 0 0 30px rgba(245, 200, 66, 0.8); }
+}
+
+.drop-zone__filename {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(245, 200, 66, 0.1);
+  border: 1px solid var(--border-gold);
+  border-radius: 50px;
+  padding: 6px 16px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drop-zone__change-btn {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  transition: color var(--t-fast);
+}
+.drop-zone__change-btn:hover { color: var(--gold); }
+
 .form-input-real {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-glass);
@@ -967,4 +1090,45 @@ img, svg { display: block; }
   font-size: 0.88rem;
   color: #5dde8a;
   line-height: 1.5;
+}
+
+/* Publish coming-soon overlay */
+.publish-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.publish-overlay__card {
+  background: var(--bg-mid);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+}
+
+.publish-overlay__title {
+  color: var(--text-primary);
+}
+
+.publish-overlay__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.publish-overlay__title {
+  margin-bottom: 12px;
+}
+
+.publish-overlay__body {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
 }

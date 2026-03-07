@@ -271,77 +271,6 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
 });
 
 
-/* ----------------------------------------------------------
-   5. AUTH STATE — check /api/auth/me on page load
-   ---------------------------------------------------------- */
-/* Note 27: This section implements a "stateless" auth check. The server does
-   not store sessions in a database; instead it issues a signed JWT stored in
-   an httpOnly cookie. On every page load, we ask the server to validate that
-   cookie and return the user's profile. This is the modern alternative to
-   server-side session stores. */
-(function initAuth() {
-  var authPanel   = document.getElementById('auth-panel');
-  var uploadPanel = document.getElementById('upload-panel');
-  var navUser     = document.getElementById('nav-user');
-  var navSignin   = document.getElementById('nav-signin');
-  var navAvatar   = document.getElementById('nav-avatar');
-  var navName     = document.getElementById('nav-name');
-  var navLogout   = document.getElementById('nav-logout');
-  var uploadWelcome = document.getElementById('upload-welcome');
-
-  function showLoggedIn(user) {
-    if (authPanel)   authPanel.style.display   = 'none';
-    if (uploadPanel) uploadPanel.style.display  = '';
-    if (navUser)     navUser.style.display      = 'flex';
-    if (navSignin)   navSignin.style.display    = 'none';
-    if (navAvatar && user.avatar) {
-      navAvatar.src = user.avatar;
-      navAvatar.alt = user.name || '';
-    }
-    if (navName)     navName.textContent = user.name || user.email || '';
-    if (uploadWelcome) uploadWelcome.textContent = 'Welcome back, ' + (user.name || user.email) + '!';
-  }
-
-  function showLoggedOut() {
-    if (authPanel)   authPanel.style.display   = '';
-    if (uploadPanel) uploadPanel.style.display  = 'none';
-    if (navUser)     navUser.style.display      = 'none';
-    if (navSignin)   navSignin.style.display    = '';
-  }
-
-  /* Note 28: credentials: 'same-origin' instructs fetch to include cookies
-     when the request goes to the same domain. Without this option, browsers
-     omit cookies from fetch requests for security reasons. The backend reads
-     the auth_token cookie to verify the JWT and return the user object. */
-  fetch('/api/auth/me', { credentials: 'same-origin' })
-    .then(function(res) { return res.ok ? res.json() : null; })
-    .then(function(user) { user ? showLoggedIn(user) : showLoggedOut(); })
-    /* Note 29: The .catch ensures the page does not break if the network is
-       down or the API is unreachable. Failing gracefully to showLoggedOut()
-       is safer than showing a broken half-logged-in state. */
-    .catch(function() { showLoggedOut(); });
-
-  if (navLogout) {
-    navLogout.addEventListener('click', function() {
-      fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
-        .then(function() { showLoggedOut(); })
-        .catch(function() { showLoggedOut(); });
-    });
-  }
-
-  /* Check for auth_error query param (set by callback on failure) */
-  var params = new URLSearchParams(window.location.search);
-  var authError = params.get('auth_error');
-  if (authError) {
-    var errEl = document.getElementById('upload-error');
-    if (errEl) {
-      errEl.textContent = 'Sign-in failed: ' + authError.replace(/_/g, ' ');
-      errEl.style.display = '';
-    }
-    /* Clean up URL without reload */
-    history.replaceState(null, '', window.location.pathname);
-  }
-})();
 
 
 /* ----------------------------------------------------------
@@ -357,7 +286,6 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
   var form        = document.getElementById('upload-form');
   var fileInput   = document.getElementById('video-file');
   var dropZone    = document.getElementById('drop-zone');
-  var fileLabel   = document.getElementById('file-selected');
   var progressWrap = document.getElementById('upload-progress-wrap');
   var progressFill = document.getElementById('upload-progress-fill');
   var progressLabel = document.getElementById('upload-progress-label');
@@ -368,7 +296,14 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
   if (!form) return;
 
   var CHUNK_SIZE = 10 * 1024 * 1024; /* 10 MB per chunk */
+  var MAX_SIZE = 100 * 1024 * 1024;  /* 100 MB */
+  var MAX_DURATION = 300;            /* 5 minutes in seconds */
   var selectedFile = null;
+
+  var dzDefault  = dropZone ? dropZone.querySelector('.drop-zone__default')  : null;
+  var dzSelected = dropZone ? dropZone.querySelector('.drop-zone__selected') : null;
+  var dzFilename = document.getElementById('drop-zone-filename');
+  var dzChange   = document.getElementById('drop-zone-change');
 
   function showError(msg) {
     if (errorEl)   { errorEl.textContent = msg; errorEl.style.display = ''; }
@@ -391,19 +326,72 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
     if (progressFill) progressFill.style.width = '0%';
   }
 
-  /* Show filename when file is chosen */
+  function activateSelectedState(file) {
+    selectedFile = file;
+    var sizeMB = (file.size / 1024 / 1024).toFixed(1);
+    if (dzFilename) dzFilename.textContent = file.name + ' \u00b7 ' + sizeMB + ' MB';
+    if (dropZone)  dropZone.classList.add('drop-zone--has-file');
+    if (dzDefault)  dzDefault.style.display  = 'none';
+    if (dzSelected) {
+      dzSelected.style.display = 'flex';
+      /* Re-trigger entry animation by forcing a reflow */
+      dzSelected.style.animation = 'none';
+      void dzSelected.offsetWidth;
+      dzSelected.style.animation = '';
+    }
+  }
+
+  function resetToDefaultState() {
+    selectedFile = null;
+    if (dropZone)  dropZone.classList.remove('drop-zone--has-file');
+    if (dzDefault)  dzDefault.style.display  = '';
+    if (dzSelected) dzSelected.style.display = 'none';
+    if (fileInput)  fileInput.value = '';
+  }
+
+  /* Validate and show selected state */
   function onFileChosen(file) {
     if (!file) return;
-    selectedFile = file;
-    if (fileLabel) {
-      fileLabel.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
-      fileLabel.style.display = '';
+
+    if (file.size > MAX_SIZE) {
+      showError('Video must be under 100 MB. Your file is ' + (file.size / 1024 / 1024).toFixed(1) + ' MB.');
+      resetToDefaultState();
+      return;
     }
+
+    /* Check duration via a temporary video element */
+    var tempVideo = document.createElement('video');
+    tempVideo.preload = 'metadata';
+    var objectURL = URL.createObjectURL(file);
+    tempVideo.src = objectURL;
+    tempVideo.onloadedmetadata = function() {
+      URL.revokeObjectURL(objectURL);
+      if (tempVideo.duration > MAX_DURATION) {
+        showError('Video must be under 5 minutes. Your video is ' + Math.ceil(tempVideo.duration / 60) + ' min.');
+        resetToDefaultState();
+        return;
+      }
+      if (errorEl) errorEl.style.display = 'none';
+      activateSelectedState(file);
+    };
+    tempVideo.onerror = function() {
+      URL.revokeObjectURL(objectURL);
+      /* Cannot read metadata — accept the file anyway, server will validate */
+      if (errorEl) errorEl.style.display = 'none';
+      activateSelectedState(file);
+    };
   }
 
   if (fileInput) {
     fileInput.addEventListener('change', function() {
       onFileChosen(fileInput.files[0] || null);
+    });
+  }
+
+  /* "Change file" button re-opens the file picker */
+  if (dzChange && fileInput) {
+    dzChange.addEventListener('click', function() {
+      fileInput.click();
     });
   }
 
@@ -427,95 +415,24 @@ document.querySelectorAll('a[href^="#"]').forEach(function(link) {
     });
   }
 
-  form.addEventListener('submit', async function(e) {
+  form.addEventListener('submit', function(e) {
     e.preventDefault();
-    if (errorEl)   errorEl.style.display = 'none';
-    if (successEl) successEl.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'none';
 
     var title = (document.getElementById('story-title') || {}).value || '';
-    var desc  = (document.getElementById('story-desc')  || {}).value || '';
 
     if (!title.trim()) { showError('Please add a story title.'); return; }
     if (!selectedFile)  { showError('Please select a video file.'); return; }
 
-    if (submitBtn) submitBtn.disabled = true;
-    resetProgress();
-
-    try {
-      /* Note 31: The upload is a two-phase protocol:
-         Phase 1 (init) — tell TikTok how large the video is and get back a
-         session URL and recommended chunk size.
-         Phase 2 (chunks) — send binary chunks to that session URL. */
-      /* Step 1: Init upload session */
-      setProgress(2, 'Preparing upload…');
-      var initRes = await fetch('/api/tiktok/init', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), description: desc.trim(), fileSizeBytes: selectedFile.size }),
-      });
-      var initData = await initRes.json();
-      if (!initRes.ok || initData.error) {
-        throw new Error(initData.error || 'Failed to start upload session.');
-      }
-
-      var uploadUrl   = initData.uploadUrl;
-      var chunkSize   = initData.chunkSize  || CHUNK_SIZE;
-      var totalChunks = initData.totalChunks;
-
-      /* Step 2: Read and send each chunk */
-      for (var i = 0; i < totalChunks; i++) {
-        var start  = i * chunkSize;
-        var end    = Math.min(start + chunkSize, selectedFile.size);
-        /* Note 32: File.slice(start, end) returns a Blob — a reference to
-           a portion of the file without loading the entire file into memory.
-           blob.arrayBuffer() then loads only those bytes into RAM, keeping
-           memory usage proportional to chunk size (10 MB), not file size. */
-        var blob   = selectedFile.slice(start, end);
-        var buffer = await blob.arrayBuffer();
-
-        /* Note 33: JSON cannot carry binary data directly. Converting to base64
-           (btoa) encodes binary as ASCII-safe text at the cost of ~33% size
-           overhead. An alternative is FormData with a Blob, but base64 in JSON
-           works reliably across all Vercel function configurations. */
-        /* Convert ArrayBuffer to base64 for JSON transport */
-        var bytes  = new Uint8Array(buffer);
-        var binary = '';
-        bytes.forEach(function(b) { binary += String.fromCharCode(b); });
-        var b64 = btoa(binary);
-
-        var pct = Math.round(((i + 1) / totalChunks) * 95);
-        setProgress(pct, 'Uploading chunk ' + (i + 1) + ' of ' + totalChunks + '…');
-
-        var chunkRes = await fetch('/api/tiktok/chunk', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            uploadUrl:   uploadUrl,
-            chunkIndex:  i,
-            totalChunks: totalChunks,
-            fileSizeBytes: selectedFile.size,
-            chunkData:   b64,
-          }),
-        });
-        var chunkData = await chunkRes.json();
-        if (!chunkRes.ok || chunkData.error) {
-          throw new Error(chunkData.error || 'Chunk ' + (i + 1) + ' upload failed.');
-        }
-      }
-
-      setProgress(100, 'Published!');
-      showSuccess('Your story was published to TikTok successfully!');
-      form.reset();
-      selectedFile = null;
-      if (fileLabel) fileLabel.style.display = 'none';
-
-    } catch (err) {
-      resetProgress();
-      showError(err.message || 'Upload failed. Please try again.');
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
-    }
+    var overlay = document.getElementById('publish-overlay');
+    if (overlay) overlay.style.display = 'flex';
   });
+
+  var overlayClose = document.getElementById('publish-overlay-close');
+  if (overlayClose) {
+    overlayClose.addEventListener('click', function() {
+      var overlay = document.getElementById('publish-overlay');
+      if (overlay) overlay.style.display = 'none';
+    });
+  }
 })();
