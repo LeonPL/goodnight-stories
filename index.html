@@ -1,27 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Good Night Stories with AI</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Share your goodnight stories with the world. Upload your bedtime story videos directly to TikTok through our creator platform — Good Stories in Full Length.">
+  <title>Good Stories in Full Length — Share Your Goodnight Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <main class="hero">
-        <div class="content">
-            <h1>Good Night Stories <span class="ai-text">with AI</span></h1>
-            <p>Magic woven from algorithms, told for the heart.</p>
-        </div>
-    </main>
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="#" class="nav__logo">
+          <span class="nav__logo-icon">🌙</span>
+          <span class="nav__logo-text">Good Stories</span>
+        </a>
+        <a href="#signin" class="btn btn--gold btn--sm">Get Started</a>
+      </div>
+    </div>
+  </header>
 
-    <footer>
-        <nav class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="termsOfService.html">Terms of Service</a>
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="hero__content">
+      <div class="hero__badge">
+        <span class="hero__badge-dot" aria-hidden="true"></span>
+        For storytellers on TikTok
+      </div>
+      <h1 class="hero__headline">
+        Share Your Goodnight Story<br>
+        <span class="hero__headline-accent">with the World</span>
+      </h1>
+      <p class="hero__sub">
+        A creator platform for parents and storytellers. Upload your bedtime
+        story videos directly to the <strong>Good Stories in Full Length</strong>
+        TikTok channel — in seconds.
+      </p>
+      <div class="hero__actions">
+        <a href="#signin" class="btn btn--gold btn--lg">Sign In &amp; Start Creating</a>
+        <a href="#how-it-works" class="btn btn--ghost btn--lg">See How It Works</a>
+      </div>
+    </div>
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOW IT WORKS
+       ============================================================ -->
+  <section class="steps" id="how-it-works">
+    <div class="container">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Three steps to share your story</h2>
+      <div class="steps__grid">
+
+        <div class="step-card" data-reveal>
+          <div class="step-card__number">01</div>
+          <span class="step-card__icon" aria-hidden="true">🔐</span>
+          <h3 class="step-card__title">Sign In</h3>
+          <p class="step-card__desc">
+            Log in with your Google, TikTok, or Apple account. We never store
+            your TikTok password — authentication is handled securely via OAuth 2.0.
+          </p>
+        </div>
+
+        <div class="step-card" data-reveal data-delay="100">
+          <div class="step-card__number">02</div>
+          <span class="step-card__icon" aria-hidden="true">📹</span>
+          <h3 class="step-card__title">Upload Your Story</h3>
+          <p class="step-card__desc">
+            Drag and drop your bedtime story recording. Add a title, a short
+            description, and choose your cover frame. We handle the rest.
+          </p>
+        </div>
+
+        <div class="step-card" data-reveal data-delay="200">
+          <div class="step-card__number">03</div>
+          <span class="step-card__icon" aria-hidden="true">🚀</span>
+          <h3 class="step-card__title">Publish to TikTok</h3>
+          <p class="step-card__desc">
+            One click publishes your story directly to the Good Stories in Full
+            Length TikTok channel, reaching thousands of families every night.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FEATURES / BENTO GRID
+       ============================================================ -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Built for creators, loved by families</h2>
+      <div class="bento">
+
+        <div class="bento__card bento__card--wide" data-reveal>
+          <span class="bento__icon" aria-hidden="true">✨</span>
+          <h3>TikTok-Native Publishing</h3>
+          <p>
+            Publish directly to TikTok using the official TikTok Content Posting API.
+            Your video appears on the channel with full metadata — title, description,
+            cover image — all intact and correctly formatted for TikTok's feed.
+          </p>
+        </div>
+
+        <div class="bento__card bento__card--tall" data-reveal data-delay="100">
+          <span class="bento__icon" aria-hidden="true">👨‍👩‍👧</span>
+          <h3>Family Community</h3>
+          <p>
+            Join a curated channel where only approved, wholesome goodnight stories
+            are shared. Quality over quantity — every story goes through a simple
+            review before it reaches families.
+          </p>
+          <div class="bento__stat">
+            <span class="bento__stat-num">10K+</span>
+            <span class="bento__stat-label">Families watching nightly</span>
+          </div>
+        </div>
+
+        <div class="bento__card" data-reveal data-delay="150">
+          <span class="bento__icon" aria-hidden="true">🛡️</span>
+          <h3>Safe &amp; Secure</h3>
+          <p>OAuth 2.0 authentication via Google, TikTok, and Apple. We never see your credentials or store your passwords.</p>
+        </div>
+
+        <div class="bento__card" data-reveal data-delay="200">
+          <span class="bento__icon" aria-hidden="true">🌙</span>
+          <h3>Made for Bedtime</h3>
+          <p>Optimized for long-form story videos. Upload calm, soothing narrations up to 10 minutes in length.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       UPLOAD UI MOCKUP
+       ============================================================ -->
+  <section class="mockup" id="upload">
+    <div class="container">
+      <div class="section-label">The App</div>
+      <h2 class="section-title">Simple enough for any storyteller</h2>
+      <div class="mockup__window" data-reveal>
+        <div class="mockup__titlebar" aria-hidden="true">
+          <span class="mockup__dot mockup__dot--red"></span>
+          <span class="mockup__dot mockup__dot--yellow"></span>
+          <span class="mockup__dot mockup__dot--green"></span>
+          <span class="mockup__url">goodstoriesinfulllength.com/upload</span>
+        </div>
+        <div class="mockup__body">
+
+          <!-- Drop zone -->
+          <div class="upload-zone" aria-hidden="true">
+            <span class="upload-zone__icon">🎬</span>
+            <p class="upload-zone__primary">Drag &amp; drop your story video</p>
+            <p class="upload-zone__secondary">MP4, MOV · up to 2 GB · max 10 min</p>
+            <button class="btn btn--gold btn--sm" type="button" tabindex="-1">Browse Files</button>
+          </div>
+
+          <!-- Metadata form -->
+          <div class="upload-form" aria-hidden="true">
+            <div class="form-group">
+              <span class="form-label">Story Title</span>
+              <div class="form-input">The Three Little Pigs — A Gentle Retelling</div>
+            </div>
+            <div class="form-group">
+              <span class="form-label">Description</span>
+              <div class="form-textarea">A calming, slow-paced version perfect for winding down. Narrated softly for little ones ages 3–8.</div>
+            </div>
+            <div class="form-toggle-row">
+              <div>
+                <span class="form-toggle-label">Publish to TikTok</span>
+                <span class="form-toggle-sub">Good Stories in Full Length channel</span>
+              </div>
+              <div class="toggle toggle--on" aria-hidden="true">
+                <div class="toggle__thumb"></div>
+              </div>
+            </div>
+            <button class="btn btn--gold btn--full" type="button" tabindex="-1">
+              🚀 Publish Story
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SIGN IN
+       ============================================================ -->
+  <section class="signin" id="signin">
+    <div class="container">
+      <div class="signin__card" data-reveal>
+        <div class="section-label" style="text-align: center;">Get Started Free</div>
+        <h2 class="section-title" style="text-align: center; margin-bottom: 16px;">
+          Start sharing stories tonight
+        </h2>
+        <p class="signin__sub">
+          Sign in with your existing account. No new password to remember.
+        </p>
+        <div class="signin__buttons">
+
+          <button class="oauth-btn oauth-btn--google" type="button">
+            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66 2.84-.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <button class="oauth-btn oauth-btn--tiktok" type="button">
+            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.95a8.16 8.16 0 004.77 1.53V7.04a4.85 4.85 0 01-1-.35z"/>
+            </svg>
+            Continue with TikTok
+          </button>
+
+          <button class="oauth-btn oauth-btn--apple" type="button">
+            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.36c1.37.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.56-1.32 3.1-2.54 4.03zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            Continue with Apple
+          </button>
+
+        </div>
+        <p class="signin__legal">
+          By signing in you agree to our
+          <a href="termsOfService.html">Terms of Service</a> and
+          <a href="privacy.html">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__brand">🌙 Good Stories in Full Length</div>
+        <nav class="footer__links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="termsOfService.html">Terms of Service</a>
         </nav>
-        <p>&copy; 2026 Good Night Stories AI</p>
-    </footer>
+        <p class="footer__copy">&copy; 2026 Good Stories in Full Length. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Three.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Main JS -->
+  <script src="script.js"></script>
 
 </body>
 </html>

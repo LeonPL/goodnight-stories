@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "3d-web-experience": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "9081911c0c5fda9731d2106a31113c976c4e62e73ab852b4564346295b35f235"
+    },
+    "audit-website": {
+      "source": "squirrelscan/skills",
+      "sourceType": "github",
+      "computedHash": "2c060290f90340e8bb6009502ec936b8ebb3ff889332a43e24bf210528ebba9f"
+    },
+    "oauth-social-login": {
+      "source": "dadbodgeoff/drift",
+      "sourceType": "github",
+      "computedHash": "98e247cd5f1019beaaf73064cf6bea485b32d679eec7b59514427ecbf7f6c50b"
+    },
+    "premium_web_design": {
+      "source": "jerrar670/surf-website",
+      "sourceType": "github",
+      "computedHash": "64ea358c26f74241b62a181b461cb4b24d9fce8f858fc6696890da8eba2b9379"
+    }
+  }
+}
