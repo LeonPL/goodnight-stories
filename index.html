@@ -1,12 +1,28 @@
+<!-- Note 1: DOCTYPE html declares this as an HTML5 document. Without it,
+     browsers enter "quirks mode" and apply inconsistent legacy layout rules. -->
 <!DOCTYPE html>
+<!-- Note 2: lang="en" helps screen readers select the correct pronunciation
+     engine and assists search engines with language-based indexing. -->
 <html lang="en">
 <head>
+  <!-- Note 3: charset="UTF-8" ensures the browser interprets the file as
+       Unicode. Without this, special characters may render as garbled symbols. -->
   <meta charset="UTF-8">
+  <!-- Note 4: viewport meta is required for responsive layouts. width=device-width
+       prevents mobile browsers from scaling to a virtual 980px desktop viewport. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Note 5: The description meta tag appears as the snippet under a page
+       title in search engine results. It does not affect ranking but
+       strongly influences click-through rate. -->
   <meta name="description" content="Share your goodnight stories with the world. Upload your bedtime story videos directly to TikTok through our creator platform — Good Stories in Full Length.">
   <title>Good Stories in Full Length — Share Your Goodnight Story</title>
+  <!-- Note 6: rel="preconnect" opens a TCP+TLS connection to the Google Fonts
+       server early, reducing font load latency by ~100-200 ms on cold connections. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Note 7: display=swap shows a fallback font while Inter loads, preventing
+       invisible text. Listing only the weights actually used keeps the
+       download payload small. -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,7 +38,20 @@
           <span class="nav__logo-icon">🌙</span>
           <span class="nav__logo-text">Good Night Stories</span>
         </a>
-        <a href="#signin" class="btn btn--gold btn--sm">Get Started</a>
+        <!-- Note 8: The nav auth area has two mutually exclusive states.
+             JavaScript toggles display:none between them after calling /api/auth/me.
+             Both are present in the HTML; only one is visible at a time. -->
+        <div class="nav__auth">
+          <!-- Note 9: style="display:none" hides this element by default.
+               Script 5 (initAuth) reveals it when the user is logged in.
+               Width/height on <img> prevent layout shift during load. -->
+          <div id="nav-user" class="nav-user" style="display:none;">
+            <img id="nav-avatar" class="nav-user__avatar" src="" alt="" width="28" height="28">
+            <span id="nav-name" class="nav-user__name"></span>
+            <button id="nav-logout" class="btn btn--ghost btn--sm" type="button">Sign out</button>
+          </div>
+          <a id="nav-signin" href="#signin" class="btn btn--gold btn--sm">Get Started</a>
+        </div>
       </div>
     </div>
   </header>
@@ -70,8 +99,8 @@
           <span class="step-card__icon" aria-hidden="true">🔐</span>
           <h3 class="step-card__title">Sign In</h3>
           <p class="step-card__desc">
-            Log in with your Google, TikTok, or Apple account. We never store
-            your TikTok password — authentication is handled securely via OAuth 2.0.
+            Log in with your Google account. We never store your password —
+            authentication is handled securely via OAuth 2.0.
           </p>
         </div>
 
@@ -135,7 +164,7 @@
         <div class="bento__card" data-reveal data-delay="150">
           <span class="bento__icon" aria-hidden="true">🛡️</span>
           <h3>Safe &amp; Secure</h3>
-          <p>OAuth 2.0 authentication via Google, TikTok, and Apple. We never see your credentials or store your passwords.</p>
+          <p>OAuth 2.0 authentication via Google. We never see your credentials or store your passwords.</p>
         </div>
 
         <div class="bento__card" data-reveal data-delay="200">
@@ -202,50 +231,103 @@
   </section>
 
   <!-- ============================================================
-       SIGN IN
+       SIGN IN / UPLOAD
        ============================================================ -->
   <section class="signin" id="signin">
     <div class="container">
       <div class="signin__card" data-reveal>
-        <div class="section-label" style="text-align: center;">Get Started Free</div>
-        <h2 class="section-title" style="text-align: center; margin-bottom: 16px;">
-          Start sharing stories tonight
-        </h2>
-        <p class="signin__sub">
-          Sign in with your existing account. No new password to remember.
-        </p>
-        <div class="signin__buttons">
 
-          <button class="oauth-btn oauth-btn--google" type="button">
-            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66 2.84-.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Continue with Google
-          </button>
-
-          <button class="oauth-btn oauth-btn--tiktok" type="button">
-            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.95a8.16 8.16 0 004.77 1.53V7.04a4.85 4.85 0 01-1-.35z"/>
-            </svg>
-            Continue with TikTok
-          </button>
-
-          <button class="oauth-btn oauth-btn--apple" type="button">
-            <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.36c1.37.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.56-1.32 3.1-2.54 4.03zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-            </svg>
-            Continue with Apple
-          </button>
-
+        <!-- State: not logged in -->
+        <div id="auth-panel">
+          <div class="section-label" style="text-align: center;">Get Started Free</div>
+          <h2 class="section-title" style="text-align: center; margin-bottom: 16px;">
+            Start sharing stories tonight
+          </h2>
+          <p class="signin__sub">
+            Sign in with your existing account. No new password to remember.
+          </p>
+          <div class="signin__buttons">
+            <a href="/api/auth/google" class="oauth-btn oauth-btn--google">
+              <svg class="oauth-btn__icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66 2.84-.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </a>
+          </div>
+          <p class="signin__legal">
+            By signing in you agree to our
+            <a href="termsOfService.html">Terms of Service</a> and
+            <a href="privacy.html">Privacy Policy</a>.
+          </p>
         </div>
-        <p class="signin__legal">
-          By signing in you agree to our
-          <a href="termsOfService.html">Terms of Service</a> and
-          <a href="privacy.html">Privacy Policy</a>.
-        </p>
+
+        <!-- State: logged in — upload form -->
+        <div id="upload-panel" style="display:none;">
+          <div class="section-label" style="text-align: center;">Upload Your Story</div>
+          <h2 class="section-title" style="text-align: center; margin-bottom: 8px;">
+            Share a goodnight story
+          </h2>
+          <p class="signin__sub" id="upload-welcome"></p>
+
+          <!-- Note 10: novalidate disables the browser's native HTML5
+               validation UI so we can show custom styled error messages
+               instead of the default browser popups. Validation logic lives
+               in initUpload() in script.js. -->
+          <form id="upload-form" class="upload-real-form" novalidate>
+            <!-- Note 11: The drop zone uses JS drag events (dragover, dragleave, drop)
+                 to accept files dragged from the OS file manager. It also wraps a
+                 hidden <input type="file"> triggered by the "Browse Files" label click. -->
+            <div class="upload-drop-zone" id="drop-zone">
+              <span class="upload-zone__icon">🎬</span>
+              <p class="upload-zone__primary">Drag &amp; drop your story video</p>
+              <p class="upload-zone__secondary">MP4, MOV &middot; up to 2 GB &middot; max 10 min</p>
+              <!-- Note 12: Wrapping an <input type="file"> inside a <label> means
+                 clicking the label triggers the file picker. The input itself is
+                 hidden (display:none) to avoid the default unstyled browser control.
+                 accept restricts the file picker to MP4 and QuickTime (.mov) formats. -->
+            <label class="btn btn--gold btn--sm" style="cursor:pointer;">
+                Browse Files
+                <input type="file" id="video-file" accept="video/mp4,video/quicktime,.mp4,.mov" style="display:none;">
+              </label>
+              <p id="file-selected" class="upload-zone__secondary" style="display:none;font-weight:600;"></p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="story-title">Story Title <span style="color:#e5a020">*</span></label>
+              <input class="form-input-real" type="text" id="story-title" name="title" maxlength="150" placeholder="e.g. The Three Little Pigs — A Gentle Retelling" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="story-desc">Description</label>
+              <textarea class="form-textarea-real" id="story-desc" name="description" maxlength="2200" rows="3" placeholder="A calming, slow-paced version perfect for winding down..."></textarea>
+            </div>
+
+            <!-- Note 13: aria-live="polite" tells screen readers to announce
+                 changes to this region without interrupting the current speech.
+                 This lets blind users hear the upload progress updates. -->
+            <div id="upload-progress-wrap" style="display:none;" aria-live="polite">
+              <div class="upload-progress-bar">
+                <div class="upload-progress-bar__fill" id="upload-progress-fill" style="width:0%"></div>
+              </div>
+              <p class="upload-zone__secondary" id="upload-progress-label">Uploading…</p>
+            </div>
+
+            <!-- Note 14: role="alert" makes screen readers announce this element
+                 immediately when it becomes visible (assertive live region).
+                 role="status" is a polite live region — used for non-critical
+                 success messages that should not interrupt speech. -->
+            <div id="upload-error" class="upload-error" role="alert" style="display:none;"></div>
+            <div id="upload-success" class="upload-success" role="status" style="display:none;"></div>
+
+            <button class="btn btn--gold btn--full" type="submit" id="upload-btn">
+              🚀 Publish Story
+            </button>
+          </form>
+        </div>
+
       </div>
     </div>
   </section>

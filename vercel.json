@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/tiktok/chunk.js": {
+      "maxDuration": 60
+    },
+    "api/tiktok/init.js": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

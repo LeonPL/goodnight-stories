@@ -6,6 +6,11 @@
       "sourceType": "github",
       "computedHash": "9081911c0c5fda9731d2106a31113c976c4e62e73ab852b4564346295b35f235"
     },
+    "add-educational-comments": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "65f6defd9f7da4af496d3c706839d2f48da6761b5eb1bb21ffc7f7aa35288670"
+    },
     "audit-website": {
       "source": "squirrelscan/skills",
       "sourceType": "github",

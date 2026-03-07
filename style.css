@@ -1,12 +1,24 @@
 /* ============================================================
    RESET + CUSTOM PROPERTIES
    ============================================================ */
+/* Note 1: The universal selector reset (*, *::before, *::after) removes all
+   browser default margins and paddings. Different browsers apply different
+   defaults (e.g. Chrome and Firefox disagree on <ul> padding), so zeroing
+   them gives you a predictable baseline before adding your own spacing. */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
+  /* Note 2: box-sizing: border-box makes width/height include padding and
+     border. The default content-box model excludes them, so adding padding
+     unexpectedly widens elements. border-box is considered best practice
+     in modern CSS resets. */
   box-sizing: border-box;
 }
 
+/* Note 3: CSS Custom Properties (variables) are declared on :root so they
+   are accessible everywhere in the document. Centralizing colors, spacing,
+   and transition easings here means you only need to change one value to
+   restyle the whole site consistently. */
 :root {
   --bg-deep:        #0a0511;
   --bg-mid:         #0f0a1e;
@@ -140,6 +152,10 @@ img, svg { display: block; }
 /* ============================================================
    NAV
    ============================================================ */
+/* Note 4: position: fixed removes the nav from document flow and pins it
+   to the viewport. z-index: 100 ensures it renders above all other content.
+   Without z-index the nav may be hidden behind positioned elements like
+   the hero canvas. */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -148,6 +164,11 @@ img, svg { display: block; }
   transition: background var(--t-med), padding var(--t-med), box-shadow var(--t-med);
 }
 
+/* Note 5: backdrop-filter: blur() creates the "frosted glass" effect by
+   blurring what is rendered behind the element. It requires the nav to have
+   a semi-transparent background; a fully opaque background would hide the
+   content below and make the blur invisible. The -webkit- prefix is needed
+   for Safari. */
 .nav--scrolled {
   background: rgba(10, 5, 17, 0.82);
   backdrop-filter: blur(20px);
@@ -712,6 +733,12 @@ img, svg { display: block; }
 /* ============================================================
    SCROLL REVEAL SYSTEM
    ============================================================ */
+/* Note 6: Elements with [data-reveal] start invisible and shifted down.
+   When the IntersectionObserver in script.js adds the is-visible class,
+   the CSS transition animates opacity and translateY simultaneously.
+   Using transform instead of top/margin for the movement is important:
+   transforms are composited on the GPU and do not trigger layout reflow,
+   keeping the animation smooth at 60 fps. */
 [data-reveal] {
   opacity: 0;
   transform: translateY(28px);
@@ -754,6 +781,11 @@ img, svg { display: block; }
 /* ============================================================
    REDUCED MOTION
    ============================================================ */
+/* Note 7: prefers-reduced-motion is an OS-level accessibility setting for
+   users with vestibular disorders or motion sensitivity. Overriding all
+   animation and transition durations to near-zero (0.01ms rather than 0
+   to avoid division-by-zero in some browsers) disables motion while
+   keeping the logical animation states intact. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -790,4 +822,149 @@ img, svg { display: block; }
   .hero__actions { flex-direction: column; align-items: center; }
   .hero__actions .btn { width: 100%; max-width: 300px; }
   .bento__card { padding: 28px 24px; }
+}
+
+/* ============================================================
+   NAV AUTH STATE
+   ============================================================ */
+.nav__auth {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-user__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-gold);
+}
+
+.nav-user__name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   UPLOAD PANEL (REAL FORM)
+   ============================================================ */
+#upload-panel {
+  text-align: left;
+}
+
+#upload-panel .section-label,
+#upload-panel .section-title {
+  text-align: center;
+}
+
+.upload-real-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.upload-drop-zone {
+  border: 2px dashed var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 32px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  cursor: default;
+}
+
+.upload-drop-zone.drop-zone--over {
+  border-color: var(--gold);
+  background: rgba(245, 200, 66, 0.06);
+}
+
+.form-input-real {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  line-height: 1.5;
+  width: 100%;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  outline: none;
+}
+.form-input-real:focus {
+  border-color: var(--border-gold);
+  box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.1);
+}
+
+.form-textarea-real {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  line-height: 1.6;
+  width: 100%;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  outline: none;
+}
+.form-textarea-real:focus {
+  border-color: var(--border-gold);
+  box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.1);
+}
+
+/* Progress bar */
+.upload-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.upload-progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #ff9f43);
+  border-radius: 3px;
+  transition: width 0.3s var(--ease-out);
+}
+
+/* Error and success messages */
+.upload-error {
+  background: rgba(255, 80, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: #ff8080;
+  line-height: 1.5;
+}
+
+.upload-success {
+  background: rgba(40, 200, 100, 0.1);
+  border: 1px solid rgba(40, 200, 100, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: #5dde8a;
+  line-height: 1.5;
 }
