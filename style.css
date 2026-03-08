@@ -612,6 +612,30 @@ img, svg { display: block; }
   text-align: center;
 }
 
+.ready-banner {
+  background: rgba(229, 160, 32, 0.08);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.ready-banner__badge {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.ready-banner__text {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
+
 .signin__sub {
   font-size: 1rem;
   color: var(--text-secondary);
